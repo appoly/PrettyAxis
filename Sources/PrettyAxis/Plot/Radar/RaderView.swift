@@ -12,26 +12,31 @@ struct RadarView: View{
     var plot: RadarPlot
     var style: RadarStyle
     
-    
     @State var animated: Bool = false
     var body: some View{
-        if (plot.renderData[NoGroup]?.count ?? 0) < 1 && style.disableLegend == false{
-            contentView
-                .modifier(LegendModifier(list: self.plot.renderData.keys.map({($0,  style.color[$0] ?? style.fill[$0] ?? DEFAULT_COLOR)}), style: style.legendStyle))
-                .padding()
-                .onAppear(){
-                    withAnimation{
-                        animated = true
-                    }
+        GeometryReader { proxy in
+            VStack(alignment: .center) {
+                if (plot.renderData[NoGroup]?.count ?? 0) < 1 && style.disableLegend == false{
+                    
+                    contentView
+                        .modifier(LegendModifier(list: self.plot.renderData.keys.map({($0,  style.color[$0] ?? style.fill[$0] ?? DEFAULT_COLOR)}), style: style.legendStyle))
+                        .padding(.bottom, 25)
+                        .onAppear(){
+                            withAnimation{
+                                animated = true
+                            }
+                        }
+                }else{
+                    contentView
+                        .padding()
+                        .onAppear(){
+                            withAnimation{
+                                animated = true
+                            }
+                        }
                 }
-        }else{
-            contentView
-                .padding()
-                .onAppear(){
-                    withAnimation{
-                        animated = true
-                    }
-                }
+            }
+            .frame(width: proxy.size.width)
         }
     }
     
@@ -39,7 +44,7 @@ struct RadarView: View{
     var contentView: some View {
         let range = (min: style.fromZero  == true ? 0 : plot.range.min, max: plot.range.max)
         GeometryReader { reader in
-            ZStack {
+            ZStack(alignment: .center) {
                 content(animated: animated)
                 if style.showReferenceLine {
                     RadarReferenceLine(sides: plot.xAxisLabels.count, rounded: style.roundedReference)
@@ -48,6 +53,7 @@ struct RadarView: View{
                     RadarReferenceLine(sides: plot.xAxisLabels.count, rounded: style.roundedReference)
                         .stroke(style.referenceLineStyle.axisColor, style: StrokeStyle(lineWidth: style.referenceLineStyle.axisWidth,lineCap: .round, lineJoin: .round, dash: [10.0]))
                         .frame(width: reader.size.width / 2 , height: reader.size.height / 2)
+                    
                     ZStack(alignment: .leading) {
                         let array = [ range.min, (range.max - range.min) / 2,  range.max]
                         ForEach(array.indices, id: \.self){ index in
@@ -63,12 +69,14 @@ struct RadarView: View{
                 }
             }
             .overlay(
-                ZStack {
+                ZStack(alignment: .center) {
                     ForEach(self.plot.xAxisLabels.indices, id: \.self) { index in
                         VStack {
                             Text(self.plot.xAxisLabels[index])
                                 .font(style.referenceLineStyle.xAxisLabelFont)
                                 .foregroundColor(style.referenceLineStyle.axisLabelColor)
+                                .rotationEffect(.radians(-(Double.pi * 2 * Double(index) / Double(self.plot.xAxisLabels.count))))
+                            
                             Spacer()
                         }
                         .offset(y: style.xLabelOffset)

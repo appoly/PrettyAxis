@@ -21,7 +21,7 @@ struct RadarReferenceLine: Shape{
         }
         
         for i in 0 ... sides {
-            let angle = (Double(i) * (360.0 / Double(sides))) * Double.pi / 180
+            let angle = ((Double(i) * (360.0 / Double(sides))) * Double.pi / 180) + 19.95
             let pt = CGPoint(x: c.x + CGFloat(cos(angle) * h), y: c.y + CGFloat(sin(angle) * h))
             if rounded {
                 path.move(to: c)

@@ -16,11 +16,10 @@ struct LegendModifier: ViewModifier{
     var style: LegendStyle
     
     func body(content: Content) -> some View {
-        VStack(spacing: 0){
-            LegendView(list: list, style: style)
+        VStack(alignment: .center, spacing: 40){
             content
+            LegendView(list: list, style: style)
+            
         }
     }
-    
-    
 }

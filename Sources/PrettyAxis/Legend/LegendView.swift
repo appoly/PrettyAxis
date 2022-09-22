@@ -12,17 +12,31 @@ struct LegendView: View {
     var style: LegendStyle
     
     var body: some View {
-        LazyVGrid(columns:[GridItem(.flexible()),GridItem(.flexible()),GridItem(.flexible())], spacing: 0){
+//        LazyVGrid(columns:[GridItem(.flexible()),GridItem(.flexible()),GridItem(.flexible())], spacing: 0){
+//            ForEach(list, id: \.self.0) { item in
+//                HStack{
+//                    Circle()
+//                        .fill(item.1)
+//                        .frame(width: 8, height: 8)
+//                    Text(item.0)
+//                        .font(.system(size: 10))
+//                        .foregroundColor(style.labelColor)
+//                }
+//            }
+//        }
+//        .frame(maxWidth: .infinity, alignment: .center)
+//        .padding(.bottom, 16)
+        
+        HStack(alignment: .center, spacing: 20){
             ForEach(list, id: \.self.0) { item in
-                HStack{
+                HStack(spacing: 5){
                     Circle()
                         .fill(item.1)
-                        .frame(width: 8, height: 8)
+                        .frame(width: 10, height: 10)
                     Text(item.0)
-                        .font(.system(size: 10))
+                        .font(.system(size: 12))
                         .foregroundColor(style.labelColor)
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
         .frame(maxWidth: .infinity, alignment: .center)
